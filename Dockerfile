@@ -22,6 +22,7 @@ RUN apk add --no-cache \
     py3-pip \
     supervisor \
     wget \
+    tzdata \
     && mkdir -p /run/nginx \
     && mkdir -p /var/www/html \
     && mkdir -p /run/php
@@ -34,6 +35,7 @@ RUN wget -q https://curl.se/ca/cacert.pem -O /etc/ssl/certs/cacert.pem \
 ENV SSL_CERT_FILE=/etc/ssl/certs/cacert.pem
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/cacert.pem
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/cacert.pem
+ENV TZ=Asia/Dhaka
 
 # Verify Python3 installation
 RUN which python3 && python3 --version
@@ -42,6 +44,7 @@ RUN which python3 && python3 --version
 # Also enable dl() for dynamic extension loading at runtime
 RUN sed -i 's/^disable_functions\s*=.*/disable_functions =/' /etc/php83/php.ini \
     && sed -i 's|^;curl.cainfo\s*=.*|curl.cainfo=/etc/ssl/certs/cacert.pem|' /etc/php83/php.ini \
+    && sed -i 's|^;date.timezone\s*=.*|date.timezone=Asia/Dhaka|' /etc/php83/php.ini \
     && sed -i 's|^;openssl.cafile\s*=.*|openssl.cafile=/etc/ssl/certs/cacert.pem|' /etc/php83/php.ini \
     && sed -i 's/^;enable_dl\s*=.*/enable_dl = On/' /etc/php83/php.ini \
     && sed -i 's|^;extension_dir\s*=.*|extension_dir=/usr/lib/php83/modules|' /etc/php83/php.ini
