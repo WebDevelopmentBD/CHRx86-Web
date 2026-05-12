@@ -19,6 +19,9 @@ RUN apk add --no-cache \
     && mkdir -p /var/www/html \
     && mkdir -p /run/php
 
+# Verify Python3 installation
+RUN which python3 && python3 --version
+
 # Copy nginx config
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
