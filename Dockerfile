@@ -22,6 +22,9 @@ RUN apk add --no-cache \
 # Verify Python3 installation
 RUN which python3 && python3 --version
 
+# Ensure shell_exec and exec are not disabled in PHP
+RUN sed -i 's/^disable_functions\s*=.*/disable_functions =/' /etc/php83/php.ini
+
 # Copy nginx config
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 
