@@ -64,6 +64,10 @@ RUN echo '#!/bin/sh' > /usr/local/bin/certbot-renew.sh \
     && echo 'certbot renew --quiet --deploy-hook "nginx -s reload"' >> /usr/local/bin/certbot-renew.sh \
     && chmod +x /usr/local/bin/certbot-renew.sh
 
+# Copy startup script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 EXPOSE 80 443
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/usr/local/bin/start.sh"]
