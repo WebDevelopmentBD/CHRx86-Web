@@ -11,10 +11,10 @@ SSL_CONF_DST="/etc/nginx/http.d/ssl.conf"
 echo "[start.sh] Checking certificate..."
 
 if [ -f "$CERT_PATH" ] && [ -f "$KEY_PATH" ]; then
-    echo "[start.sh] Certificate found — enabling HTTPS config."
+    echo "[start.sh] Certificate found. Enabling HTTPS config."
     cp "$SSL_CONF_SRC" "$SSL_CONF_DST"
 else
-    echo "[start.sh] Certificate NOT found — running certbot..."
+    echo "[start.sh] Certificate not found. Running certbot..."
 
     # Ensure webroot exists
     mkdir -p /var/www/html/.well-known/acme-challenge
@@ -34,11 +34,11 @@ else
         --non-interactive
 
     if [ $? -eq 0 ]; then
-        echo "[start.sh] Certificate issued — enabling HTTPS config."
+        echo "[start.sh] Certificate issued. Enabling HTTPS config."
         cp "$SSL_CONF_SRC" "$SSL_CONF_DST"
         nginx -s stop
     else
-        echo "[start.sh] Certbot FAILED — continuing HTTP only."
+        echo "[start.sh] Certbot failed. Starting HTTP only."
         nginx -s stop
     fi
 fi
