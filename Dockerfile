@@ -49,8 +49,11 @@ RUN sed -i 's/^disable_functions\s*=.*/disable_functions =/' /etc/php83/php.ini 
     && sed -i 's/^;enable_dl\s*=.*/enable_dl = On/' /etc/php83/php.ini \
     && sed -i 's|^;extension_dir\s*=.*|extension_dir=/usr/lib/php83/modules|' /etc/php83/php.ini
 
-# Copy nginx config
+# Copy nginx configs
+# default.conf = HTTP only (always loaded)
+# ssl.conf = HTTPS (copied into place by start.sh after cert exists)
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
+COPY nginx/ssl.conf /etc/nginx/ssl.conf.disabled
 
 # Copy supervisord config
 COPY supervisord.conf /etc/supervisord.conf

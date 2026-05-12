@@ -4,19 +4,22 @@ DOMAIN="1e6ba5c88830f78f.sn.mynetname.net"
 CERT_PATH="/home/data/certs/live/${DOMAIN}/fullchain.pem"
 KEY_PATH="/home/data/certs/live/${DOMAIN}/privkey.pem"
 CERT_DIR="/home/data/certs"
-EMAIL="abbasuddin1989@aol.com"
+EMAIL="your@email.com"
+SSL_CONF_SRC="/etc/nginx/ssl.conf.disabled"
+SSL_CONF_DST="/etc/nginx/http.d/ssl.conf"
 
 echo "[start.sh] Checking certificate..."
 
 if [ -f "$CERT_PATH" ] && [ -f "$KEY_PATH" ]; then
-    echo "[start.sh] Certificate found at $CERT_PATH — skipping certbot."
+    echo "[start.sh] Certificate found — enabling HTTPS config."
+    cp "$SSL_CONF_SRC" "$SSL_CONF_DST"
 else
     echo "[start.sh] Certificate NOT found — running certbot..."
 
     # Ensure webroot exists
     mkdir -p /var/www/html/.well-known/acme-challenge
 
-    # Start nginx temporarily for HTTP-01 challenge
+    # Start nginx temporarily on HTTP only for challenge
     nginx
 
     # Run certbot
@@ -31,11 +34,11 @@ else
         --non-interactive
 
     if [ $? -eq 0 ]; then
-        echo "[start.sh] Certificate issued successfully."
-        # Stop temporary nginx before supervisord takes over
+        echo "[start.sh] Certificate issued — enabling HTTPS config."
+        cp "$SSL_CONF_SRC" "$SSL_CONF_DST"
         nginx -s stop
     else
-        echo "[start.sh] Certbot FAILED — starting HTTP only."
+        echo "[start.sh] Certbot FAILED — continuing HTTP only."
         nginx -s stop
     fi
 fi
