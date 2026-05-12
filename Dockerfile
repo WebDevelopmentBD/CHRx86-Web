@@ -1,5 +1,8 @@
 FROM alpine:3.19
 
+# Enable community repository (required for certbot)
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.19/community" >> /etc/apk/repositories
+
 # Install nginx, PHP 8.3, Python3, supervisord
 RUN apk add --no-cache \
     nginx \
@@ -13,6 +16,8 @@ RUN apk add --no-cache \
     php83-gd \
     php83-exif \
     php83-fileinfo \
+    certbot \
+    certbot-nginx \
     python3 \
     py3-pip \
     supervisor \
@@ -51,6 +56,11 @@ COPY supervisord.conf /etc/supervisord.conf
 RUN echo "<?php phpinfo(); ?>" > /var/www/html/index.php \
     && echo "print('Python3 OK')" > /var/www/html/test.py
 
-EXPOSE 80
+# Add certbot renewal script
+RUN echo '#!/bin/sh' > /usr/local/bin/certbot-renew.sh \
+    && echo 'certbot renew --quiet --deploy-hook "nginx -s reload"' >> /usr/local/bin/certbot-renew.sh \
+    && chmod +x /usr/local/bin/certbot-renew.sh
+
+EXPOSE 80 443
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
