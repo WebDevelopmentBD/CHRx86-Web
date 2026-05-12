@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     php83-curl \
     php83-mbstring \
     php83-session \
+    php83-sqlite3 \
     python3 \
     py3-pip \
     supervisor \
