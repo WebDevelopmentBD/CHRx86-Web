@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Fix DNS resolution inside container
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+
 DOMAIN="1e6ba5c88830f78f.sn.mynetname.net"
 CERT_PATH="/home/data/certs/live/${DOMAIN}/fullchain.pem"
 KEY_PATH="/home/data/certs/live/${DOMAIN}/privkey.pem"
