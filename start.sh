@@ -23,6 +23,13 @@ else
     # Ensure webroot exists
     mkdir -p /var/www/html/.well-known/acme-challenge
 
+    # Re-apply DNS right before certbot (in case it was overwritten)
+    echo "nameserver 1.1.1.1" > /etc/resolv.conf
+    echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+
+    # Verify DNS before running certbot
+    nslookup acme-v02.api.letsencrypt.org && echo "[start.sh] DNS OK." || echo "[start.sh] DNS still failing."
+
     # Start nginx temporarily on HTTP only for challenge
     nginx
 
