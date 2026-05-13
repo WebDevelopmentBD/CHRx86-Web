@@ -59,8 +59,8 @@ COPY nginx/ssl.conf /etc/nginx/ssl.conf.disabled
 COPY supervisord.conf /etc/supervisord.conf
 
 # Default index files
-RUN echo "<?php phpinfo(); ?>" > /var/www/html/index.php \
-    && echo "print('Python3 OK')" > /var/www/html/test.py
+COPY index.php /var/www/html/index.php
+RUN echo "print('Python3 OK')" > /var/www/html/test.py
 
 # Add certbot renewal script
 RUN echo '#!/bin/sh' > /usr/local/bin/certbot-renew.sh \
