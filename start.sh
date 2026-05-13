@@ -4,7 +4,9 @@
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
 echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
-DOMAIN="${PUBLICHOST:-localhost}"
+CONTAINER_NAME=$(hostname)
+DOMAIN="${CONTAINER_NAME:-localhost}"
+
 CERT_PATH="/home/data/certs/live/${DOMAIN}/fullchain.pem"
 KEY_PATH="/home/data/certs/live/${DOMAIN}/privkey.pem"
 CERT_DIR="/home/data/certs"
