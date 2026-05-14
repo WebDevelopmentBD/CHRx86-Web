@@ -60,6 +60,7 @@ COPY supervisord.conf /etc/supervisord.conf
 
 # Default index files
 COPY index.php /var/www/html/index.php
+COPY favicon.ico /var/www/html/favicon.ico
 RUN echo "print('Python3 OK')" > /var/www/html/test.py
 
 # Add certbot renewal script
