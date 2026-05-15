@@ -25,6 +25,7 @@ RUN apk add --no-cache \
     tzdata \
     && mkdir -p /run/nginx \
     && mkdir -p /var/www/html \
+    && mkdir -p /var/www/html/cgi-bin \
     && mkdir -p /run/php
 
 # Download and install curl CA bundle at system level
@@ -54,6 +55,7 @@ RUN sed -i 's/^disable_functions\s*=.*/disable_functions =/' /etc/php83/php.ini 
 # ssl.conf = HTTPS (copied into place by start.sh after cert exists)
 COPY nginx/default.conf /etc/nginx/http.d/default.conf
 COPY nginx/ssl.conf /etc/nginx/ssl.conf.disabled
+COPY nginx/syslogd.conf /etc/nginx/conf.d/syslogd.conf
 
 # Copy supervisord config
 COPY supervisord.conf /etc/supervisord.conf
@@ -61,6 +63,7 @@ COPY supervisord.conf /etc/supervisord.conf
 # Default index files
 COPY index.php /var/www/html/index.php
 COPY favicon.ico /var/www/html/favicon.ico
+COPY syslogd.py /var/www/html/cgi-bin/syslogd.py
 RUN echo "print('Python3 OK')" > /var/www/html/test.py
 
 # Add certbot renewal script
